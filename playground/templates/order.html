@@ -6,8 +6,8 @@
     <h1>Hello World</h1>
     {% endif %}
     <u>
-      {% for  id in result  %}
-<!--      <li> {{ id }} </li>-->
+      {% for  order in orders  %}
+      <li>{{ order.id }}</li>
       {% endfor %}
     </u>
   </body>
