@@ -1,6 +1,28 @@
 from django.shortcuts import render
+from django.core.mail import send_mail, mail_admins, BadHeaderError
 from django.db import transaction
 from store.models import Order,OrderItem,Product,Customer,Collection, Cart, CartItem
+
+
+# Badheadererror protect us from attackers
+def say_hello(request):
+    try:
+        # send_mail('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com']) # send email to anyone
+        mail_admins('subject', 'message', html_message='message', )
+        # for this to work we need to configure our site admin, got to setting module here we define our site admin
+    except BadHeaderError:
+        pass
+
+    return render(request, 'hello.html', {'name': 'Paras'})
+
+
+
+
+
+
+
+
+
 
 # def say_hello(request):
 #     # For creating new object in database
@@ -62,24 +84,24 @@ from store.models import Order,OrderItem,Product,Customer,Collection, Cart, Cart
 # Transcations:- sometimes we want multiple changes to our database , all changes should change together
 # Or if one changes fails, then all changes should be rolled back.
 
-#@transaction.atomic() # we can use as a decorator or a context manager, so we can apply this decorator
+# @transaction.atomic() # we can use as a decorator or a context manager, so we can apply this decorator
 # to this view function and this wrap this entire function inside a transaction
-def say_hello(request):
-
-    # we can use this as a context manager if we want only some code inside a transaction
-    with transaction.atomic(): # as a context manager
-        order = Order()
-        order.customer_id = 1
-        # We always create parent record first before we can create child record
-        order.save()
-
-        item= OrderItem()
-        item.order = order
-        item.product_id = 1
-        item.quantity = 1
-        item.unit_price = 10
-        item.save()
-    return render(request, 'hello.html', {'name': 'Paras'})
-
+# def say_hello(request):
+#
+#     # we can use this as a context manager if we want only some code inside a transaction
+#     with transaction.atomic(): # as a context manager
+#         order = Order()
+#         order.customer_id = 1
+#         # We always create parent record first before we can create child record
+#         order.save()
+#
+#         item= OrderItem()
+#         item.order = order
+#         item.product_id = 1
+#         item.quantity = 1
+#         item.unit_price = 10
+#         item.save()
+#     return render(request, 'hello.html', {'name': 'Paras'})
+#
 
 

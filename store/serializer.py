@@ -195,7 +195,7 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
 class CreateOrderSerializer(serializers.Serializer):
     with transaction.atomic(): # we use transaction if our database goes offline in between creating database,
         # then we stuck for avoiding that we use transaction
-        cart_id = serializers.UUIDField()
+        cart_id = serializers.UUIDField() # with this we get id from url
         # we don't use ModelSerializer,
         # coz we don't have order_id field in order class and to create an order we need order_id.
 
