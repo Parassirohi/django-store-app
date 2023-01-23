@@ -1,35 +1,38 @@
 from django.shortcuts import render
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
 from templated_mail.mail import BaseEmailMessage
-
+from .tasks import notify_customers
 from django.db import transaction
 from store.models import Order,OrderItem,Product,Customer,Collection, Cart, CartItem
 
 
 # Badheadererror protect us from attackers
+# def say_hello(request):
+#     try:
+#         # send_mail('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com']) # send email to anyone
+#         # mail_admins('subject', 'message', html_message='message', )
+#         # for this to work we need to configure our site admin, got to setting module here we define our site admin
+#         # message = EmailMessage('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com'])
+#         # message.attach_file('playground/static/images/temple.jpeg')
+#         # message.send()
+#
+#         # after storing message in templates do this below
+#         message = BaseEmailMessage(
+#             template_name='emails/hello.html',
+#             context={'name': 'Paras'},
+#
+#         )
+#         message.send(['john@parasbuy.com'])
+#     except BadHeaderError:
+#         pass
+#
+#     return render(request, 'hello.html', {'name': 'Paras'})
+
+
+#  sending emails with celery
 def say_hello(request):
-    try:
-        # send_mail('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com']) # send email to anyone
-        # mail_admins('subject', 'message', html_message='message', )
-        # for this to work we need to configure our site admin, got to setting module here we define our site admin
-        # message = EmailMessage('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com'])
-        # message.attach_file('playground/static/images/temple.jpeg')
-        # message.send()
-
-        # after storing message in templates do this below
-        message = BaseEmailMessage(
-            template_name='emails/hello.html',
-            context={'name': 'Paras'},
-
-        )
-        message.send(['john@parasbuy.com'])
-    except BadHeaderError:
-        pass
-
+    notify_customers.delay('Hello')
     return render(request, 'hello.html', {'name': 'Paras'})
-
-
-
 
 
 
