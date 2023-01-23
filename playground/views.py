@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
+from templated_mail.mail import BaseEmailMessage
+
 from django.db import transaction
 from store.models import Order,OrderItem,Product,Customer,Collection, Cart, CartItem
 
@@ -10,9 +12,17 @@ def say_hello(request):
         # send_mail('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com']) # send email to anyone
         # mail_admins('subject', 'message', html_message='message', )
         # for this to work we need to configure our site admin, got to setting module here we define our site admin
-        message = EmailMessage('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com'])
-        message.attach_file('playground/static/images/temple.jpeg')
-        message.send()
+        # message = EmailMessage('subject', 'message', 'info@parasbuy.com', ['bob@parasbuy.com'])
+        # message.attach_file('playground/static/images/temple.jpeg')
+        # message.send()
+
+        # after storing message in templates do this below
+        message = BaseEmailMessage(
+            template_name='emails/hello.html',
+            context={'name': 'Paras'},
+
+        )
+        message.send(['john@parasbuy.com'])
     except BadHeaderError:
         pass
 
